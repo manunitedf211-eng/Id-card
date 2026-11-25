@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Smart Digital ID Card Maker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg: #070d19;
+            --card: #0f172a;
+            --border: #1e293b;
+            --accent: #38bdf8;
+            --green: #10b981;
+            --text: #f8fafc;
+            --muted: #94a3b8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: radial-gradient(circle at top, #102442 0%, var(--bg) 65%);
+            color: var(--text);
+            min-height: 100vh;
+            padding: 14px 14px 40px;
+        }
+        .wrap { max-width: 480px; margin: 0 auto; }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: rgba(15, 23, 42, 0.9);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+        }
+        .header h1 { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .badge-hd {
+            background: linear-gradient(90deg, #0284c7, #38bdf8);
+            color: #04101c;
+            font-size: 0.65rem;
+            font-weight: 900;
+            padding: 3px 8px;
+            border-radius: 8px;
+        }
+
+        .box {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 16px;
+            margin-bottom: 14px;
+        }
+        .box-title {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .field-label {
+            display: block;
+            font-size: 0.72rem;
+            color: var(--muted);
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .inp {
+            width: 100%;
+            background: #060b14;
+            border: 1px solid #26354d;
+            border-radius: 12px;
+            padding: 10px 12px;
+            color: #fff;
+            font-family: inherit;
+            font-size: 0.82rem;
+            margin-bottom: 11px;
+            outline: none;
+        }
+        .inp:focus { border-color: var(--accent); }
+        .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* PHOTO UPLOAD */
+        .photo-drop {
+            border: 1.5px dashed #334155;
+            background: #060b14;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+        .photo-thumb {
+            width: 54px;
+            height: 54px;
+            border-radius: 12px;
+            background: #1e293b;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            flex-shrink: 0;
+            color: var(--accent);
+            font-size: 1.3rem;
+        }
+        .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* COLOR PICKER SWATCHES */
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-bottom: 14px;
+        }
+        .swatch {
+            height: 38px;
+            border-radius: 11px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 0.8rem;
+            transition: transform 0.15s ease;
+        }
+        .swatch.active {
+            border-color: #fff;
+            transform: scale(1.07);
+            box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
+        }
+
+        .btn-done {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #059669, #10b981);
+            color: #03150e;
+            font-family: inherit;
+            font-size: 0.94rem;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-done:active { transform: scale(0.98); }
+
+        /* SUCCESS BANNER */
+        .success-banner {
+            display: none;
+            background: rgba(16, 185, 129, 0.14);
+            border: 1px solid #10b981;
+            color: #6ee7b7;
+            border-radius: 14px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: center;
+            animation: popIn 0.3s ease;
+        }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        /* RESULT SECTION */
+        #result-section { display: none; }
+        .canvas-wrap {
+            background: #060b14;
+            border: 1px solid #26354d;
+            border-radius: 16px;
+            padding: 10px;
+            margin-bottom: 12px;
+        }
+        canvas {
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            display: block;
+        }
+        .dl-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .btn-dl {
+            padding: 12px 10px;
+            border-radius: 13px;
+            border: none;
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .btn-photo { background: linear-gradient(90deg, #0284c7, #38bdf8); color: #04101c; }
+        .btn-doc { background: linear-gradient(90deg, #d97706, #fbbf24); color: #090d16; }
+
+        /* PRINT / PDF DOCUMENT MODE */
+        @media print {
+            body * { visibility: hidden; }
+            #id-canvas, #id-canvas * { visibility: visible; }
+            #id-canvas {
+                position: fixed;
+                left: 50%;
+                top: 40px;
+                transform: translateX(-50%);
+                width: 420px !important;
+                height: auto !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="wrap">
+        <div class="header">
+            <h1><i class="fas fa-id-card" style="color:var(--accent);"></i> Digital ID Studio</h1>
+            <span class="badge-hd">HD ID & DOC</span>
+        </div>
+
+        <div id="success-banner" class="success-banner">
+            <i class="fas fa-check-circle"></i> Success! መታወቂያዎ በተሳካ ሁኔታ ተዘጋጅቷል!
+        </div>
+
+        <!-- FORM SECTION -->
+        <div class="box">
+            <div class="box-title"><i class="fas fa-user-edit"></i> 1. መረጃዎን ይሙሉ (Fill Information)</div>
+
+            <label class="field-label">የመታወቂያ ፎቶ (Profile Photo)</label>
+            <div class="photo-drop" onclick="document.getElementById('photo-file-inp').click()">
+                <div class="photo-thumb" id="photo-preview-box"><i class="fas fa-camera"></i></div>
+                <div>
+                    <b style="font-size:0.82rem; display:block;">ፎቶ ይምረጡ (Upload Photo)</b>
+                    <small style="color:var(--muted); font-size:0.7rem;">Tap to select face photo from gallery</small>
+                </div>
+            </div>
+            <input type="file" id="photo-file-inp" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
+
+            <label class="field-label">ሙሉ ስም (Full Name) *</label>
+            <input type="text" id="inp-name" class="inp" placeholder="ለምሳሌ፡ Fikadu Aymro">
+
+            <div class="row-2">
+                <div>
+                    <label class="field-label">ድርሻ / ስራ (Role / Title) *</label>
+                    <input type="text" id="inp-role" class="inp" placeholder="Student / Developer">
+                </div>
+                <div>
+                    <label class="field-label">የመታወቂያ ቁጥር (ID No.)</label>
+                    <input type="text" id="inp-idnum" class="inp" placeholder="Auto / ETH-2026">
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div>
+                    <label class="field-label">ስልክ ቁጥር (Phone) *</label>
+                    <input type="tel" id="inp-phone" class="inp" placeholder="+251 9...">
+                </div>
+                <div>
+                    <label class="field-label">ከተማ / ክልል (City / Region)</label>
+                    <input type="text" id="inp-city" class="inp" placeholder="Addis Ababa, Ethiopia">
+                </div>
+            </div>
+
+            <div class="row-2">
+                <div>
+                    <label class="field-label">የትውልድ ቀን (Date of Birth)</label>
+                    <input type="text" id="inp-dob" class="inp" placeholder="12/05/2008">
+                </div>
+                <div>
+                    <label class="field-label">የደም አይነት (Blood Group)</label>
+                    <select id="inp-blood" class="inp">
+                        <option value="O+">O+</option>
+                        <option value="A+">A+</option>
+                        <option value="B+">B+</option>
+                        <option value="AB+">AB+</option>
+                        <option value="O-">O-</option>
+                        <option value="A-">A-</option>
+                    </select>
+                </div>
+            </div>
+
+            <label class="field-label">የመታወቂያ ቀለም ይምረጡ (Choose Card Color)</label>
+            <div class="color-grid" id="color-picker-grid"></div>
+
+            <button class="btn-done" onclick="generateIdCard()">
+                <i class="fas fa-check-circle"></i> Done / መታወቂያውን አዘጋጅ
+            </button>
+        </div>
+
+        <!-- GENERATED ID CARD PREVIEW & DOWNLOAD -->
+        <div class="box" id="result-section">
+            <div class="box-title"><i class="fas fa-award"></i> 2. የተዘጋጀው መታወቂያ (Generated Digital ID)</div>
+            <div class="canvas-wrap">
+                <canvas id="id-canvas" width="900" height="560"></canvas>
+            </div>
+            <div class="dl-grid">
+                <button class="btn-dl btn-photo" onclick="downloadAsPhoto()">
+                    <i class="fas fa-image"></i> Save Photo (PNG)
+                </button>
+                <button class="btn-dl btn-doc" onclick="downloadAsDocument()">
+                    <i class="fas fa-file-pdf"></i> Save Document (PDF)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        if (tg) {
+            try { tg.expand(); tg.ready(); } catch (e) {}
+            if (tg.initDataUnsafe && tg.initDataUnsafe.user) {
+                const u = tg.initDataUnsafe.user;
+                const full = [u.first_name, u.last_name].filter(Boolean).join(" ");
+                if (full) document.getElementById("inp-name").value = full;
+                document.getElementById("inp-idnum").value = "ID-" + u.id;
+            }
+        }
+
+        const THEMES = [
+            { name: "Royal Blue", c1: "#0f294a", c2: "#0284c7", accent: "#38bdf8" },
+            { name: "Emerald Green", c1: "#064e3b", c2: "#059669", accent: "#34d399" },
+            { name: "Gold & Onyx", c1: "#18181b", c2: "#854d0e", accent: "#fbbf24" },
+            { name: "Crimson Red", c1: "#450a0a", c2: "#dc2626", accent: "#f87171" },
+            { name: "Cyber Purple", c1: "#2e1065", c2: "#7c3aed", accent: "#c084fc" },
+            { name: "Teal Cyan", c1: "#083344", c2: "#0891b2", accent: "#22d3ee" }
+        ];
+
+        let selectedTheme = THEMES[0];
+        let uploadedImg = null;
+
+        function renderSwatches() {
+            const box = document.getElementById("color-picker-grid");
+            box.innerHTML = THEMES.map((t, idx) => `
+                <div class="swatch ${idx === 0 ? "active" : ""}" style="background:linear-gradient(135deg, ${t.c1}, ${t.c2});" onclick="pickTheme(${idx}, this)" title="${t.name}">
+                    ${idx === 0 ? "✓" : ""}
+                </div>
+            `).join("");
+        }
+
+        function pickTheme(idx, el) {
+            selectedTheme = THEMES[idx];
+            document.querySelectorAll(".swatch").forEach(s => {
+                s.classList.remove("active");
+                s.innerText = "";
+            });
+            el.classList.add("active");
+            el.innerText = "✓";
+            if (document.getElementById("result-section").style.display === "block") {
+                drawIdCard();
+            }
+        }
+
+        function handlePhotoUpload(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(ev) {
+                const img = new Image();
+                img.onload = function() {
+                    uploadedImg = img;
+                    document.getElementById("photo-preview-box").innerHTML = `<img src="${ev.target.result}" alt="Photo">`;
+                };
+                img.src = ev.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function roundRect(ctx, x, y, w, h, r) {
+            ctx.beginPath();
+            ctx.moveTo(x + r, y);
+            ctx.arcTo(x + w, y, x + w, y + h, r);
+            ctx.arcTo(x + w, y + h, x, y + h, r);
+            ctx.arcTo(x, y + h, x, y, r);
+            ctx.arcTo(x, y, x + w, y, r);
+            ctx.closePath();
+        }
+
+        function generateIdCard() {
+            const name = document.getElementById("inp-name").value.trim();
+            if (!name) {
+                alert("እባክዎ መጀመሪያ ሙሉ ስምዎን (Full Name) ያስገቡ!");
+                return;
+            }
+            if (!document.getElementById("inp-idnum").value.trim()) {
+                document.getElementById("inp-idnum").value = "ETH-" + Math.floor(100000 + Math.random() * 900000);
+            }
+
+            drawIdCard();
+
+            const banner = document.getElementById("success-banner");
+            banner.style.display = "block";
+            const res = document.getElementById("result-section");
+            res.style.display = "block";
+            res.scrollIntoView({ behavior: "smooth" });
+        }
+
+        function drawIdCard() {
+            const canvas = document.getElementById("id-canvas");
+            const ctx = canvas.getContext("2d");
+
+            const name = document.getElementById("inp-name").value.trim() || "FULL NAME";
+            const role = document.getElementById("inp-role").value.trim() || "MEMBER";
+            const idNum = document.getElementById("inp-idnum").value.trim() || "ETH-202601";
+            const phone = document.getElementById("inp-phone").value.trim() || "+251 900 000 000";
+            const city = document.getElementById("inp-city").value.trim() || "Addis Ababa, Ethiopia";
+            const dob = document.getElementById("inp-dob").value.trim() || "01/01/2005";
+            const blood = document.getElementById("inp-blood").value || "O+";
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Card Background Gradient
+            roundRect(ctx, 10, 10, 880, 540, 32);
+            const grad = ctx.createLinearGradient(0, 0, 900, 560);
+            grad.addColorStop(0, selectedTheme.c1);
+            grad.addColorStop(1, "#070c16");
+            ctx.fillStyle = grad;
+            ctx.fill();
+
+            // Border Accent
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = selectedTheme.accent;
+            ctx.stroke();
+
+            // Top Header Strip
+            roundRect(ctx, 10, 10, 880, 105, 32);
+            ctx.fillStyle = selectedTheme.c2;
+            ctx.fill();
+            ctx.fillRect(10, 75, 880, 40);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "900 30px Poppins, sans-serif";
+            ctx.fillText("OFFICIAL DIGITAL IDENTIFICATION", 46, 65);
+
+            ctx.font = "600 16px Poppins, sans-serif";
+            ctx.fillStyle = "#e0f2fe";
+            ctx.fillText("VERIFIED IDENTITY PASS • 2026", 46, 95);
+
+            // Smart Chip Graphic
+            roundRect(ctx, 765, 35, 76, 54, 10);
+            ctx.fillStyle = "#fbbf24";
+            ctx.fill();
+            ctx.strokeStyle = "#78350f";
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Photo Frame
+            const px = 48, py = 148, pw = 210, ph = 245;
+            roundRect(ctx, px, py, pw, ph, 20);
+            ctx.fillStyle = "#0f172a";
+            ctx.fill();
+            ctx.lineWidth = 4;
+            ctx.strokeStyle = selectedTheme.accent;
+            ctx.stroke();
+
+            if (uploadedImg) {
+                ctx.save();
+                roundRect(ctx, px + 4, py + 4, pw - 8, ph - 8, 16);
+                ctx.clip();
+                ctx.drawImage(uploadedImg, px + 4, py + 4, pw - 8, ph - 8);
+                ctx.restore();
+            } else {
+                ctx.fillStyle = selectedTheme.accent;
+                ctx.font = "800 64px Poppins, sans-serif";
+                ctx.fillText(name.charAt(0).toUpperCase(), px + 80, py + 145);
+            }
+
+            // ID Number Badge below Photo
+            roundRect(ctx, px, py + ph + 16, pw, 44, 12);
+            ctx.fillStyle = selectedTheme.c2;
+            ctx.fill();
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "800 18px Poppins, sans-serif";
+            ctx.fillText(idNum, px + 22, py + ph + 44);
+
+            // Details Column
+            const dx = 295;
+            ctx.fillStyle = selectedTheme.accent;
+            ctx.font = "700 15px Poppins, sans-serif";
+            ctx.fillText("FULL NAME", dx, 170);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "900 32px Poppins, sans-serif";
+            ctx.fillText(name.toUpperCase(), dx, 206);
+
+            // Role Pill
+            roundRect(ctx, dx, 222, 240, 34, 10);
+            ctx.fillStyle = "rgba(255,255,255,0.12)";
+            ctx.fill();
+            ctx.fillStyle = selectedTheme.accent;
+            ctx.font = "800 17px Poppins, sans-serif";
+            ctx.fillText(role.toUpperCase(), dx + 14, 245);
+
+            // Grid Info
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "600 14px Poppins, sans-serif";
+            ctx.fillText("PHONE NUMBER", dx, 295);
+            ctx.fillText("DATE OF BIRTH", dx + 250, 295);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "700 19px Poppins, sans-serif";
+            ctx.fillText(phone, dx, 322);
+            ctx.fillText(dob, dx + 250, 322);
+
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "600 14px Poppins, sans-serif";
+            ctx.fillText("ADDRESS / CITY", dx, 368);
+            ctx.fillText("BLOOD GROUP", dx + 250, 368);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "700 19px Poppins, sans-serif";
+            ctx.fillText(city, dx, 395);
+            ctx.fillStyle = "#f87171";
+            ctx.fillText(blood, dx + 250, 395);
+
+            // Simulated QR Verification Matrix
+            const qx = 745, qy = 335, qs = 105;
+            ctx.fillStyle = "#ffffff";
+            roundRect(ctx, qx, qy, qs, qs, 10);
+            ctx.fill();
+            ctx.fillStyle = "#090d16";
+            for (let r = 0; r < 7; r++) {
+                for (let c = 0; c < 7; c++) {
+                    if ((r + c + name.length) % 2 === 0 || (r < 2 && c < 2) || (r > 4 && c > 4)) {
+                        ctx.fillRect(qx + 12 + c * 12, qy + 12 + r * 12, 9, 9);
+                    }
+                }
+            }
+
+            // Bottom Footer Bar
+            ctx.fillStyle = "rgba(255,255,255,0.08)";
+            ctx.fillRect(10, 485, 880, 50);
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "600 15px Poppins, sans-serif";
+            ctx.fillText("AUTHORIZED DIGITAL IDENTITY • VALIDATED & VERIFIED", 48, 516);
+        }
+
+        function downloadAsPhoto() {
+            const canvas = document.getElementById("id-canvas");
+            const name = (document.getElementById("inp-name").value.trim() || "Digital_ID").replace(/\s+/g, "_");
+            const link = document.createElement("a");
+            link.download = `${name}_ID_Card.png`;
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        }
+
+        function downloadAsDocument() {
+            const canvas = document.getElementById("id-canvas");
+            const dataUrl = canvas.toDataURL("image/png");
+            const name = document.getElementById("inp-name").value.trim() || "Digital ID";
+            const idNum = document.getElementById("inp-idnum").value.trim() || "ETH-2026";
+            const role = document.getElementById("inp-role").value.trim() || "Member";
+            const phone = document.getElementById("inp-phone").value.trim() || "-";
+            const city = document.getElementById("inp-city").value.trim() || "-";
+
+            // Generate downloadable HTML/Word-compatible Document (.doc) with embedded ID card
+            const docHtml = `
+                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
+                <head><meta charset='utf-8'><title>${name} ID Document</title></head>
+                <body style="font-family:Arial,sans-serif; padding:24px;">
+                    <h2 style="color:#0284c7;">OFFICIAL DIGITAL ID DOCUMENT</h2>
+                    <p><b>Full Name:</b> ${name}<br>
+                    <b>ID Number:</b> ${idNum}<br>
+                    <b>Role:</b> ${role}<br>
+                    <b>Phone:</b> ${phone}<br>
+                    <b>City:</b> ${city}</p>
+                    <br>
+                    <img src="${dataUrl}" style="width:520px; border-radius:12px;" />
+                </body>
+                </html>
+            `;
+            const blob = new Blob(["\ufeff", docHtml], { type: "application/msword" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `${name.replace(/\s+/g, "_")}_ID_Document.doc`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        window.addEventListener("DOMContentLoaded", renderSwatches);
+    </script>
+</body>
+</html>
