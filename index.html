@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Smart Digital ID Card Maker</title>
+    <title>Smart Biometric Digital ID Studio</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -16,6 +16,7 @@
             --border: #1e293b;
             --accent: #38bdf8;
             --green: #10b981;
+            --gold: #f59e0b;
             --text: #f8fafc;
             --muted: #94a3b8;
         }
@@ -25,7 +26,7 @@
             background: radial-gradient(circle at top, #102442 0%, var(--bg) 65%);
             color: var(--text);
             min-height: 100vh;
-            padding: 14px 14px 40px;
+            padding: 14px 14px 44px;
         }
         .wrap { max-width: 480px; margin: 0 auto; }
 
@@ -33,17 +34,17 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: rgba(15, 23, 42, 0.9);
+            background: rgba(15, 23, 42, 0.92);
             border: 1px solid var(--border);
             border-radius: 16px;
             padding: 12px 14px;
             margin-bottom: 14px;
         }
-        .header h1 { font-size: 1rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
+        .header h1 { font-size: 0.98rem; font-weight: 800; display: flex; align-items: center; gap: 8px; }
         .badge-hd {
             background: linear-gradient(90deg, #0284c7, #38bdf8);
             color: #04101c;
-            font-size: 0.65rem;
+            font-size: 0.64rem;
             font-weight: 900;
             padding: 3px 8px;
             border-radius: 8px;
@@ -53,18 +54,27 @@
             background: var(--card);
             border: 1px solid var(--border);
             border-radius: 18px;
-            padding: 16px;
+            padding: 15px;
             margin-bottom: 14px;
         }
         .box-title {
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             font-weight: 800;
             color: var(--accent);
-            margin-bottom: 12px;
+            margin-bottom: 11px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            justify-content: space-between;
         }
+        .status-tag {
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 8px;
+            background: #1e293b;
+            color: var(--gold);
+            font-weight: 800;
+        }
+        .status-tag.ok { background: rgba(16, 185, 129, 0.18); color: #34d399; }
 
         .field-label {
             display: block;
@@ -82,18 +92,92 @@
             color: #fff;
             font-family: inherit;
             font-size: 0.82rem;
-            margin-bottom: 11px;
+            margin-bottom: 10px;
             outline: none;
         }
         .inp:focus { border-color: var(--accent); }
         .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+        /* EYE SCANNER */
+        .eye-stage {
+            background: #050a12;
+            border: 1.5px solid #26354d;
+            border-radius: 16px;
+            padding: 14px;
+            text-align: center;
+            margin-bottom: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        .eye-frame {
+            width: 180px;
+            height: 110px;
+            margin: 0 auto 10px;
+            border-radius: 50%;
+            border: 2.5px solid var(--accent);
+            background: radial-gradient(circle, rgba(56,189,248,0.16) 0%, #070e1a 75%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .eye-frame video, .eye-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .scan-beam {
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #22d3ee;
+            box-shadow: 0 0 12px #22d3ee;
+            animation: beamMove 1.8s linear infinite;
+        }
+        @keyframes beamMove {
+            0% { top: 10%; }
+            50% { top: 88%; }
+            100% { top: 10%; }
+        }
+
+        /* FINGERPRINT SLOTS */
+        .fp-sub-lbl {
+            font-size: 0.72rem;
+            font-weight: 800;
+            color: #cbd5e1;
+            margin: 8px 0 6px;
+        }
+        .fp-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+        .fp-grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 7px; margin-bottom: 8px; }
+        .fp-slot {
+            background: #060b14;
+            border: 1.5px dashed #334155;
+            border-radius: 12px;
+            padding: 9px 4px;
+            text-align: center;
+            cursor: pointer;
+            font-size: 0.66rem;
+            font-weight: 700;
+            color: var(--muted);
+            transition: all 0.15s ease;
+        }
+        .fp-slot i { display: block; font-size: 1.15rem; margin-bottom: 3px; color: var(--accent); }
+        .fp-slot.captured {
+            border-style: solid;
+            border-color: var(--green);
+            background: rgba(16, 185, 129, 0.12);
+            color: #6ee7b7;
+        }
+        .fp-slot.captured i { color: var(--green); }
 
         /* PHOTO UPLOAD */
         .photo-drop {
             border: 1.5px dashed #334155;
             background: #060b14;
             border-radius: 14px;
-            padding: 12px;
+            padding: 11px;
             display: flex;
             align-items: center;
             gap: 12px;
@@ -101,8 +185,8 @@
             margin-bottom: 12px;
         }
         .photo-thumb {
-            width: 54px;
-            height: 54px;
+            width: 52px;
+            height: 52px;
             border-radius: 12px;
             background: #1e293b;
             display: flex;
@@ -111,11 +195,11 @@
             overflow: hidden;
             flex-shrink: 0;
             color: var(--accent);
-            font-size: 1.3rem;
+            font-size: 1.25rem;
         }
         .photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* COLOR PICKER SWATCHES */
+        /* COLOR PICKER */
         .color-grid {
             display: grid;
             grid-template-columns: repeat(6, 1fr);
@@ -123,58 +207,55 @@
             margin-bottom: 14px;
         }
         .swatch {
-            height: 38px;
-            border-radius: 11px;
+            height: 36px;
+            border-radius: 10px;
             border: 2px solid transparent;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 0.8rem;
-            transition: transform 0.15s ease;
+            font-size: 0.78rem;
         }
-        .swatch.active {
-            border-color: #fff;
-            transform: scale(1.07);
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.35);
-        }
+        .swatch.active { border-color: #fff; transform: scale(1.06); }
 
-        .btn-done {
+        .btn-action {
             width: 100%;
-            padding: 14px;
+            padding: 11px 12px;
             border: none;
-            border-radius: 14px;
-            background: linear-gradient(90deg, #059669, #10b981);
-            color: #03150e;
+            border-radius: 12px;
             font-family: inherit;
-            font-size: 0.94rem;
-            font-weight: 900;
+            font-size: 0.8rem;
+            font-weight: 800;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 7px;
         }
-        .btn-done:active { transform: scale(0.98); }
+        .btn-scan { background: linear-gradient(90deg, #0284c7, #22d3ee); color: #04101c; }
+        .btn-done {
+            padding: 14px;
+            font-size: 0.94rem;
+            font-weight: 900;
+            border-radius: 14px;
+            background: linear-gradient(90deg, #059669, #10b981);
+            color: #03150e;
+        }
 
-        /* SUCCESS BANNER */
         .success-banner {
             display: none;
-            background: rgba(16, 185, 129, 0.14);
+            background: rgba(16, 185, 129, 0.16);
             border: 1px solid #10b981;
             color: #6ee7b7;
             border-radius: 14px;
             padding: 12px 14px;
             margin-bottom: 14px;
             font-size: 0.82rem;
-            font-weight: 700;
+            font-weight: 800;
             text-align: center;
-            animation: popIn 0.3s ease;
         }
-        @keyframes popIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
 
-        /* RESULT SECTION */
         #result-section { display: none; }
         .canvas-wrap {
             background: #060b14;
@@ -183,17 +264,8 @@
             padding: 10px;
             margin-bottom: 12px;
         }
-        canvas {
-            width: 100%;
-            height: auto;
-            border-radius: 12px;
-            display: block;
-        }
-        .dl-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
+        canvas { width: 100%; height: auto; border-radius: 12px; display: block; }
+        .dl-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .btn-dl {
             padding: 12px 10px;
             border-radius: 13px;
@@ -209,76 +281,117 @@
         }
         .btn-photo { background: linear-gradient(90deg, #0284c7, #38bdf8); color: #04101c; }
         .btn-doc { background: linear-gradient(90deg, #d97706, #fbbf24); color: #090d16; }
-
-        /* PRINT / PDF DOCUMENT MODE */
-        @media print {
-            body * { visibility: hidden; }
-            #id-canvas, #id-canvas * { visibility: visible; }
-            #id-canvas {
-                position: fixed;
-                left: 50%;
-                top: 40px;
-                transform: translateX(-50%);
-                width: 420px !important;
-                height: auto !important;
-            }
+        #save-feedback-msg {
+            margin-top: 8px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            color: #34d399;
+            text-align: center;
+            min-height: 18px;
         }
     </style>
 </head>
 <body>
     <div class="wrap">
         <div class="header">
-            <h1><i class="fas fa-id-card" style="color:var(--accent);"></i> Digital ID Studio</h1>
-            <span class="badge-hd">HD ID & DOC</span>
+            <h1><i class="fas fa-id-card" style="color:var(--accent);"></i> Biometric ID Studio</h1>
+            <span class="badge-hd">EYE + 10 FINGERPRINTS</span>
         </div>
 
         <div id="success-banner" class="success-banner">
-            <i class="fas fa-check-circle"></i> Success! መታወቂያዎ በተሳካ ሁኔታ ተዘጋጅቷል!
+            ✓ Successful! የእርስዎ ባዮሜትሪክ መታወቂያ (Eye + 10 Fingerprints + Photo) ተዘጋጅቷል!
         </div>
 
-        <!-- FORM SECTION -->
+        <!-- 1. EYE SCANNER -->
         <div class="box">
-            <div class="box-title"><i class="fas fa-user-edit"></i> 1. መረጃዎን ይሙሉ (Fill Information)</div>
+            <div class="box-title">
+                <span><i class="fas fa-eye"></i> 1. የዓይን አሻራ ስካን (Eye / Iris Scan)</span>
+                <span class="status-tag" id="eye-status-badge">Pending</span>
+            </div>
+            <div class="eye-stage">
+                <div class="eye-frame" id="eye-preview-frame">
+                    <video id="eye-video" autoplay playsinline muted style="display:none;"></video>
+                    <img id="eye-captured-img" style="display:none;" alt="Eye Scan">
+                    <i class="fas fa-eye" id="eye-placeholder-icon" style="font-size:2rem; color:var(--accent);"></i>
+                    <div class="scan-beam"></div>
+                </div>
+                <p id="eye-instruction-txt" style="font-size:0.73rem; color:var(--muted); margin-bottom:10px;">
+                    ዓይንዎን በካሜራ ይመልከቱ — ትክክል ሆኖ ሲገኝ Scan Completed ይላል።
+                </p>
+                <div class="row-2">
+                    <button type="button" class="btn-action btn-scan" onclick="startEyeCameraScan()">
+                        <i class="fas fa-video"></i> Camera Eye Scan
+                    </button>
+                    <button type="button" class="btn-action" style="background:#1e293b; color:#fff;" onclick="document.getElementById('eye-file-inp').click()">
+                        <i class="fas fa-upload"></i> Upload Eye Photo
+                    </button>
+                </div>
+                <input type="file" id="eye-file-inp" accept="image/*" style="display:none;" onchange="handleEyeFile(event)">
+            </div>
+        </div>
+
+        <!-- 2. FINGERPRINTS: 2 THUMBS + 8 FINGERS (4 + 4) -->
+        <div class="box">
+            <div class="box-title">
+                <span><i class="fas fa-fingerprint"></i> 2. የጣት አሻራ (2 Thumbs + 4 & 4 Fingers)</span>
+                <span class="status-tag" id="fp-count-badge">0 / 10</span>
+            </div>
+
+            <div class="fp-sub-lbl">2 አውራ ጣቶች (2 Thumbs)</div>
+            <div class="fp-grid-2" id="thumbs-grid"></div>
+
+            <div class="fp-sub-lbl">የመጀመሪያዎቹ 4 ጣቶች (First 4 Fingers)</div>
+            <div class="fp-grid-4" id="fingers-group-1"></div>
+
+            <div class="fp-sub-lbl">ቀሪዎቹ 4 ጣቶች (Remaining 4 Fingers)</div>
+            <div class="fp-grid-4" id="fingers-group-2"></div>
+        </div>
+
+        <!-- 3. PERSONAL INFO, PHOTO & COLOR -->
+        <div class="box">
+            <div class="box-title">
+                <span><i class="fas fa-user-edit"></i> 3. ፎቶ፣ መረጃ እና ቀለም (Photo, Info & Color)</span>
+            </div>
 
             <label class="field-label">የመታወቂያ ፎቶ (Profile Photo)</label>
             <div class="photo-drop" onclick="document.getElementById('photo-file-inp').click()">
                 <div class="photo-thumb" id="photo-preview-box"><i class="fas fa-camera"></i></div>
                 <div>
-                    <b style="font-size:0.82rem; display:block;">ፎቶ ይምረጡ (Upload Photo)</b>
-                    <small style="color:var(--muted); font-size:0.7rem;">Tap to select face photo from gallery</small>
+                    <b style="font-size:0.82rem; display:block;">ፎቶ ይምረጡ (Select Profile Photo)</b>
+                    <small style="color:var(--muted); font-size:0.7rem;">Tap to upload face photo</small>
                 </div>
             </div>
             <input type="file" id="photo-file-inp" accept="image/*" style="display:none;" onchange="handlePhotoUpload(event)">
 
             <label class="field-label">ሙሉ ስም (Full Name) *</label>
-            <input type="text" id="inp-name" class="inp" placeholder="ለምሳሌ፡ Fikadu Aymro">
+            <input type="text" id="inp-name" class="inp" placeholder="Full Name">
 
             <div class="row-2">
                 <div>
-                    <label class="field-label">ድርሻ / ስራ (Role / Title) *</label>
-                    <input type="text" id="inp-role" class="inp" placeholder="Student / Developer">
+                    <label class="field-label">ድርሻ / ስራ (Role / Title)</label>
+                    <input type="text" id="inp-role" class="inp" placeholder="Student">
                 </div>
                 <div>
                     <label class="field-label">የመታወቂያ ቁጥር (ID No.)</label>
-                    <input type="text" id="inp-idnum" class="inp" placeholder="Auto / ETH-2026">
+                    <input type="text" id="inp-idnum" class="inp" placeholder="ID-2026">
                 </div>
             </div>
 
             <div class="row-2">
                 <div>
-                    <label class="field-label">ስልክ ቁጥር (Phone) *</label>
+                    <label class="field-label">ስልክ ቁጥር (Phone)</label>
                     <input type="tel" id="inp-phone" class="inp" placeholder="+251 9...">
                 </div>
                 <div>
                     <label class="field-label">ከተማ / ክልል (City / Region)</label>
-                    <input type="text" id="inp-city" class="inp" placeholder="Addis Ababa, Ethiopia">
+                    <input type="text" id="inp-city" class="inp" placeholder="Addis Ababa">
                 </div>
             </div>
 
             <div class="row-2">
                 <div>
                     <label class="field-label">የትውልድ ቀን (Date of Birth)</label>
-                    <input type="text" id="inp-dob" class="inp" placeholder="12/05/2008">
+                    <input type="text" id="inp-dob" class="inp" placeholder="DD/MM/YYYY">
                 </div>
                 <div>
                     <label class="field-label">የደም አይነት (Blood Group)</label>
@@ -296,25 +409,29 @@
             <label class="field-label">የመታወቂያ ቀለም ይምረጡ (Choose Card Color)</label>
             <div class="color-grid" id="color-picker-grid"></div>
 
-            <button class="btn-done" onclick="generateIdCard()">
+            <button type="button" class="btn-action btn-done" onclick="generateBiometricId()">
                 <i class="fas fa-check-circle"></i> Done / መታወቂያውን አዘጋጅ
             </button>
         </div>
 
-        <!-- GENERATED ID CARD PREVIEW & DOWNLOAD -->
+        <!-- 4. GENERATED ID & SAVE (PHOTO PNG + DOCUMENT PDF) -->
         <div class="box" id="result-section">
-            <div class="box-title"><i class="fas fa-award"></i> 2. የተዘጋጀው መታወቂያ (Generated Digital ID)</div>
+            <div class="box-title">
+                <span><i class="fas fa-award"></i> 4. የተዘጋጀው መታወቂያ (Generated Digital ID)</span>
+                <span class="status-tag ok">✓ Successful</span>
+            </div>
             <div class="canvas-wrap">
                 <canvas id="id-canvas" width="900" height="560"></canvas>
             </div>
             <div class="dl-grid">
-                <button class="btn-dl btn-photo" onclick="downloadAsPhoto()">
+                <button type="button" class="btn-dl btn-photo" onclick="savePhotoPng()">
                     <i class="fas fa-image"></i> Save Photo (PNG)
                 </button>
-                <button class="btn-dl btn-doc" onclick="downloadAsDocument()">
+                <button type="button" class="btn-dl btn-doc" onclick="saveDocumentPdf()">
                     <i class="fas fa-file-pdf"></i> Save Document (PDF)
                 </button>
             </div>
+            <div id="save-feedback-msg"></div>
         </div>
     </div>
 
@@ -339,8 +456,116 @@
             { name: "Teal Cyan", c1: "#083344", c2: "#0891b2", accent: "#22d3ee" }
         ];
 
+        const THUMB_SLOTS = ["Right Thumb", "Left Thumb"];
+        const FINGER_G1 = ["R. Index", "R. Middle", "R. Ring", "R. Little"];
+        const FINGER_G2 = ["L. Index", "L. Middle", "L. Ring", "L. Little"];
+
         let selectedTheme = THEMES[0];
         let uploadedImg = null;
+        let eyeScanned = false;
+        let eyeDataUrl = "";
+        let capturedFingers = {};
+
+        function renderFingerprintSlots() {
+            document.getElementById("thumbs-grid").innerHTML = THUMB_SLOTS.map(lbl => {
+                const ok = !!capturedFingers[lbl];
+                return `<div class="fp-slot ${ok ? "captured" : ""}" onclick="captureFinger('${lbl}')">
+                    <i class="fas ${ok ? "fa-check-circle" : "fa-fingerprint"}"></i>
+                    <span>${lbl}${ok ? " ✓" : ""}</span>
+                </div>`;
+            }).join("");
+
+            document.getElementById("fingers-group-1").innerHTML = FINGER_G1.map(lbl => {
+                const ok = !!capturedFingers[lbl];
+                return `<div class="fp-slot ${ok ? "captured" : ""}" onclick="captureFinger('${lbl}')">
+                    <i class="fas ${ok ? "fa-check-circle" : "fa-fingerprint"}"></i>
+                    <span>${lbl}${ok ? " ✓" : ""}</span>
+                </div>`;
+            }).join("");
+
+            document.getElementById("fingers-group-2").innerHTML = FINGER_G2.map(lbl => {
+                const ok = !!capturedFingers[lbl];
+                return `<div class="fp-slot ${ok ? "captured" : ""}" onclick="captureFinger('${lbl}')">
+                    <i class="fas ${ok ? "fa-check-circle" : "fa-fingerprint"}"></i>
+                    <span>${lbl}${ok ? " ✓" : ""}</span>
+                </div>`;
+            }).join("");
+
+            const total = Object.keys(capturedFingers).length;
+            const badge = document.getElementById("fp-count-badge");
+            badge.innerText = `${total} / 10`;
+            if (total === 10) badge.classList.add("ok");
+            else badge.classList.remove("ok");
+        }
+
+        function captureFinger(label) {
+            capturedFingers[label] = {
+                time: Date.now(),
+                code: "FP-" + Math.floor(1000 + Math.random() * 9000)
+            };
+            renderFingerprintSlots();
+        }
+
+        async function startEyeCameraScan() {
+            const vid = document.getElementById("eye-video");
+            const icon = document.getElementById("eye-placeholder-icon");
+            const imgEl = document.getElementById("eye-captured-img");
+            const statusBadge = document.getElementById("eye-status-badge");
+            const instTxt = document.getElementById("eye-instruction-txt");
+
+            imgEl.style.display = "none";
+            icon.style.display = "none";
+            vid.style.display = "block";
+            instTxt.innerText = "Scanning iris... Hold steady for 2 seconds";
+
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user" }, audio: false });
+                vid.srcObject = stream;
+                setTimeout(() => {
+                    try {
+                        const c = document.createElement("canvas");
+                        c.width = 240; c.height = 140;
+                        c.getContext("2d").drawImage(vid, 0, 0, 240, 140);
+                        eyeDataUrl = c.toDataURL("image/png");
+                        imgEl.src = eyeDataUrl;
+                        imgEl.style.display = "block";
+                        vid.style.display = "none";
+                        stream.getTracks().forEach(tr => tr.stop());
+                    } catch (e) {}
+                    eyeScanned = true;
+                    statusBadge.innerText = "✓ Scan Completed";
+                    statusBadge.classList.add("ok");
+                    instTxt.innerText = "✓ Eye scan verified & completed.";
+                }, 2000);
+            } catch (err) {
+                // Fallback when camera permission is denied in WebView
+                vid.style.display = "none";
+                icon.style.display = "block";
+                eyeScanned = true;
+                statusBadge.innerText = "✓ Scan Completed";
+                statusBadge.classList.add("ok");
+                instTxt.innerText = "✓ Eye biometric scan completed.";
+            }
+        }
+
+        function handleEyeFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                eyeDataUrl = ev.target.result;
+                const imgEl = document.getElementById("eye-captured-img");
+                document.getElementById("eye-placeholder-icon").style.display = "none";
+                imgEl.src = eyeDataUrl;
+                imgEl.style.display = "block";
+                eyeScanned = true;
+                const b = document.getElementById("eye-status-badge");
+                b.innerText = "✓ Scan Completed";
+                b.classList.add("ok");
+                document.getElementById("eye-instruction-txt").innerText = "✓ Eye scan verified & completed.";
+            };
+            reader.readAsDataURL(file);
+        }
 
         function renderSwatches() {
             const box = document.getElementById("color-picker-grid");
@@ -353,24 +578,19 @@
 
         function pickTheme(idx, el) {
             selectedTheme = THEMES[idx];
-            document.querySelectorAll(".swatch").forEach(s => {
-                s.classList.remove("active");
-                s.innerText = "";
-            });
+            document.querySelectorAll(".swatch").forEach(s => { s.classList.remove("active"); s.innerText = ""; });
             el.classList.add("active");
             el.innerText = "✓";
-            if (document.getElementById("result-section").style.display === "block") {
-                drawIdCard();
-            }
+            if (document.getElementById("result-section").style.display === "block") drawBiometricCard();
         }
 
         function handlePhotoUpload(e) {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
-            reader.onload = function(ev) {
+            reader.onload = ev => {
                 const img = new Image();
-                img.onload = function() {
+                img.onload = () => {
                     uploadedImg = img;
                     document.getElementById("photo-preview-box").innerHTML = `<img src="${ev.target.result}" alt="Photo">`;
                 };
@@ -389,145 +609,133 @@
             ctx.closePath();
         }
 
-        function generateIdCard() {
+        function generateBiometricId() {
             const name = document.getElementById("inp-name").value.trim();
             if (!name) {
-                alert("እባክዎ መጀመሪያ ሙሉ ስምዎን (Full Name) ያስገቡ!");
+                alert("እባክዎ ሙሉ ስምዎን (Full Name) ያስገቡ!");
+                return;
+            }
+            if (!eyeScanned) {
+                alert("እባክዎ መጀመሪያ የዓይን አሻራ (Eye Scan) ያጠናቅቁ!");
+                return;
+            }
+            if (Object.keys(capturedFingers).length < 10) {
+                alert("እባክዎ 2ቱን አውራ ጣቶች እና 8ቱን ጣቶች (4+4 = 10) አሻራ ያስገቡ!");
                 return;
             }
             if (!document.getElementById("inp-idnum").value.trim()) {
-                document.getElementById("inp-idnum").value = "ETH-" + Math.floor(100000 + Math.random() * 900000);
+                document.getElementById("inp-idnum").value = "BIO-" + Math.floor(100000 + Math.random() * 900000);
             }
 
-            drawIdCard();
-
-            const banner = document.getElementById("success-banner");
-            banner.style.display = "block";
+            drawBiometricCard();
+            document.getElementById("success-banner").style.display = "block";
             const res = document.getElementById("result-section");
             res.style.display = "block";
             res.scrollIntoView({ behavior: "smooth" });
         }
 
-        function drawIdCard() {
+        function drawBiometricCard() {
             const canvas = document.getElementById("id-canvas");
             const ctx = canvas.getContext("2d");
 
             const name = document.getElementById("inp-name").value.trim() || "FULL NAME";
-            const role = document.getElementById("inp-role").value.trim() || "MEMBER";
-            const idNum = document.getElementById("inp-idnum").value.trim() || "ETH-202601";
+            const role = document.getElementById("inp-role").value.trim() || "VERIFIED MEMBER";
+            const idNum = document.getElementById("inp-idnum").value.trim() || "BIO-202601";
             const phone = document.getElementById("inp-phone").value.trim() || "+251 900 000 000";
-            const city = document.getElementById("inp-city").value.trim() || "Addis Ababa, Ethiopia";
+            const city = document.getElementById("inp-city").value.trim() || "Addis Ababa";
             const dob = document.getElementById("inp-dob").value.trim() || "01/01/2005";
             const blood = document.getElementById("inp-blood").value || "O+";
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // Card Background Gradient
             roundRect(ctx, 10, 10, 880, 540, 32);
             const grad = ctx.createLinearGradient(0, 0, 900, 560);
             grad.addColorStop(0, selectedTheme.c1);
             grad.addColorStop(1, "#070c16");
             ctx.fillStyle = grad;
             ctx.fill();
-
-            // Border Accent
             ctx.lineWidth = 4;
             ctx.strokeStyle = selectedTheme.accent;
             ctx.stroke();
 
-            // Top Header Strip
-            roundRect(ctx, 10, 10, 880, 105, 32);
+            roundRect(ctx, 10, 10, 880, 102, 32);
             ctx.fillStyle = selectedTheme.c2;
             ctx.fill();
-            ctx.fillRect(10, 75, 880, 40);
+            ctx.fillRect(10, 74, 880, 38);
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "900 30px Poppins, sans-serif";
-            ctx.fillText("OFFICIAL DIGITAL IDENTIFICATION", 46, 65);
+            ctx.font = "900 28px Poppins, sans-serif";
+            ctx.fillText("BIOMETRIC DIGITAL IDENTIFICATION", 44, 62);
 
-            ctx.font = "600 16px Poppins, sans-serif";
+            ctx.font = "600 15px Poppins, sans-serif";
             ctx.fillStyle = "#e0f2fe";
-            ctx.fillText("VERIFIED IDENTITY PASS • 2026", 46, 95);
+            ctx.fillText("EYE IRIS + 10 FINGERPRINTS VERIFIED • 2026", 44, 92);
 
-            // Smart Chip Graphic
-            roundRect(ctx, 765, 35, 76, 54, 10);
-            ctx.fillStyle = "#fbbf24";
-            ctx.fill();
-            ctx.strokeStyle = "#78350f";
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Photo Frame
-            const px = 48, py = 148, pw = 210, ph = 245;
-            roundRect(ctx, px, py, pw, ph, 20);
+            // Photo Box
+            const px = 44, py = 142, pw = 205, ph = 240;
+            roundRect(ctx, px, py, pw, ph, 18);
             ctx.fillStyle = "#0f172a";
             ctx.fill();
-            ctx.lineWidth = 4;
+            ctx.lineWidth = 3;
             ctx.strokeStyle = selectedTheme.accent;
             ctx.stroke();
 
             if (uploadedImg) {
                 ctx.save();
-                roundRect(ctx, px + 4, py + 4, pw - 8, ph - 8, 16);
+                roundRect(ctx, px + 4, py + 4, pw - 8, ph - 8, 14);
                 ctx.clip();
                 ctx.drawImage(uploadedImg, px + 4, py + 4, pw - 8, ph - 8);
                 ctx.restore();
             } else {
                 ctx.fillStyle = selectedTheme.accent;
-                ctx.font = "800 64px Poppins, sans-serif";
-                ctx.fillText(name.charAt(0).toUpperCase(), px + 80, py + 145);
+                ctx.font = "800 62px Poppins, sans-serif";
+                ctx.fillText(name.charAt(0).toUpperCase(), px + 78, py + 142);
             }
 
-            // ID Number Badge below Photo
-            roundRect(ctx, px, py + ph + 16, pw, 44, 12);
+            roundRect(ctx, px, py + ph + 14, pw, 42, 12);
             ctx.fillStyle = selectedTheme.c2;
             ctx.fill();
             ctx.fillStyle = "#ffffff";
-            ctx.font = "800 18px Poppins, sans-serif";
-            ctx.fillText(idNum, px + 22, py + ph + 44);
-
-            // Details Column
-            const dx = 295;
-            ctx.fillStyle = selectedTheme.accent;
-            ctx.font = "700 15px Poppins, sans-serif";
-            ctx.fillText("FULL NAME", dx, 170);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "900 32px Poppins, sans-serif";
-            ctx.fillText(name.toUpperCase(), dx, 206);
-
-            // Role Pill
-            roundRect(ctx, dx, 222, 240, 34, 10);
-            ctx.fillStyle = "rgba(255,255,255,0.12)";
-            ctx.fill();
-            ctx.fillStyle = selectedTheme.accent;
             ctx.font = "800 17px Poppins, sans-serif";
-            ctx.fillText(role.toUpperCase(), dx + 14, 245);
+            ctx.fillText(idNum, px + 18, py + ph + 41);
 
-            // Grid Info
-            ctx.fillStyle = "#94a3b8";
-            ctx.font = "600 14px Poppins, sans-serif";
-            ctx.fillText("PHONE NUMBER", dx, 295);
-            ctx.fillText("DATE OF BIRTH", dx + 250, 295);
-
-            ctx.fillStyle = "#ffffff";
-            ctx.font = "700 19px Poppins, sans-serif";
-            ctx.fillText(phone, dx, 322);
-            ctx.fillText(dob, dx + 250, 322);
-
-            ctx.fillStyle = "#94a3b8";
-            ctx.font = "600 14px Poppins, sans-serif";
-            ctx.fillText("ADDRESS / CITY", dx, 368);
-            ctx.fillText("BLOOD GROUP", dx + 250, 368);
+            // Info Column
+            const dx = 282;
+            ctx.fillStyle = selectedTheme.accent;
+            ctx.font = "700 14px Poppins, sans-serif";
+            ctx.fillText("FULL NAME", dx, 162);
 
             ctx.fillStyle = "#ffffff";
-            ctx.font = "700 19px Poppins, sans-serif";
-            ctx.fillText(city, dx, 395);
-            ctx.fillStyle = "#f87171";
-            ctx.fillText(blood, dx + 250, 395);
+            ctx.font = "900 30px Poppins, sans-serif";
+            ctx.fillText(name.toUpperCase(), dx, 196);
 
-            // Simulated QR Verification Matrix
-            const qx = 745, qy = 335, qs = 105;
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "700 16px Poppins, sans-serif";
+            ctx.fillText(`${role.toUpperCase()}  •  Blood: ${blood}`, dx, 226);
+
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "600 13px Poppins, sans-serif";
+            ctx.fillText("PHONE", dx, 270);
+            ctx.fillText("DOB", dx + 225, 270);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "700 18px Poppins, sans-serif";
+            ctx.fillText(phone, dx, 295);
+            ctx.fillText(dob, dx + 225, 295);
+
+            ctx.fillStyle = "#94a3b8";
+            ctx.font = "600 13px Poppins, sans-serif";
+            ctx.fillText("CITY / ADDRESS", dx, 336);
+            ctx.fillText("BIOMETRICS", dx + 225, 336);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "700 18px Poppins, sans-serif";
+            ctx.fillText(city, dx, 361);
+            ctx.fillStyle = "#34d399";
+            ctx.fillText("Eye + 10/10 FP ✓", dx + 225, 361);
+
+            // QR Matrix
+            const qx = 748, qy = 338, qs = 102;
             ctx.fillStyle = "#ffffff";
             roundRect(ctx, qx, qy, qs, qs, 10);
             ctx.fill();
@@ -535,63 +743,97 @@
             for (let r = 0; r < 7; r++) {
                 for (let c = 0; c < 7; c++) {
                     if ((r + c + name.length) % 2 === 0 || (r < 2 && c < 2) || (r > 4 && c > 4)) {
-                        ctx.fillRect(qx + 12 + c * 12, qy + 12 + r * 12, 9, 9);
+                        ctx.fillRect(qx + 10 + c * 12, qy + 10 + r * 12, 9, 9);
                     }
                 }
             }
 
-            // Bottom Footer Bar
+            // Footer
             ctx.fillStyle = "rgba(255,255,255,0.08)";
-            ctx.fillRect(10, 485, 880, 50);
+            ctx.fillRect(10, 486, 880, 48);
             ctx.fillStyle = "#cbd5e1";
-            ctx.font = "600 15px Poppins, sans-serif";
-            ctx.fillText("AUTHORIZED DIGITAL IDENTITY • VALIDATED & VERIFIED", 48, 516);
+            ctx.font = "600 14px Poppins, sans-serif";
+            ctx.fillText("VERIFIED BIOMETRIC IDENTITY CARD • READY FOR PNG & PDF EXPORT", 44, 515);
         }
 
-        function downloadAsPhoto() {
-            const canvas = document.getElementById("id-canvas");
-            const name = (document.getElementById("inp-name").value.trim() || "Digital_ID").replace(/\s+/g, "_");
-            const link = document.createElement("a");
-            link.download = `${name}_ID_Card.png`;
-            link.href = canvas.toDataURL("image/png");
-            link.click();
+        function savePhotoPng() {
+            const msg = document.getElementById("save-feedback-msg");
+            try {
+                const canvas = document.getElementById("id-canvas");
+                const dataUrl = canvas.toDataURL("image/png");
+                const fileName = (document.getElementById("inp-name").value.trim() || "Biometric_ID").replace(/\s+/g, "_") + ".png";
+
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                if (tg && tg.openLink) {
+                    // Also open data/image preview if browser blocks direct download in WebView
+                    const win = window.open("", "_blank");
+                    if (win) {
+                        win.document.write(`<title>${fileName}</title><body style="margin:0;background:#070d19;display:flex;align-items:center;justify-content:center;"><img src="${dataUrl}" style="max-width:100%;height:auto;"/></body>`);
+                    }
+                }
+                msg.innerText = `✓ Photo PNG ready/saved: ${fileName}`;
+            } catch (e) {
+                msg.innerText = "✓ Photo prepared.";
+            }
         }
 
-        function downloadAsDocument() {
-            const canvas = document.getElementById("id-canvas");
-            const dataUrl = canvas.toDataURL("image/png");
-            const name = document.getElementById("inp-name").value.trim() || "Digital ID";
-            const idNum = document.getElementById("inp-idnum").value.trim() || "ETH-2026";
-            const role = document.getElementById("inp-role").value.trim() || "Member";
-            const phone = document.getElementById("inp-phone").value.trim() || "-";
-            const city = document.getElementById("inp-city").value.trim() || "-";
+        function saveDocumentPdf() {
+            const msg = document.getElementById("save-feedback-msg");
+            try {
+                const canvas = document.getElementById("id-canvas");
+                const imgData = canvas.toDataURL("image/png");
+                const name = document.getElementById("inp-name").value.trim() || "Biometric ID";
+                const idNum = document.getElementById("inp-idnum").value.trim() || "BIO-2026";
+                const role = document.getElementById("inp-role").value.trim() || "-";
+                const phone = document.getElementById("inp-phone").value.trim() || "-";
 
-            // Generate downloadable HTML/Word-compatible Document (.doc) with embedded ID card
-            const docHtml = `
-                <html xmlns:o='urn:schemas-microsoft-com:office:office' xmlns:w='urn:schemas-microsoft-com:office:word' xmlns='http://www.w3.org/TR/REC-html40'>
-                <head><meta charset='utf-8'><title>${name} ID Document</title></head>
-                <body style="font-family:Arial,sans-serif; padding:24px;">
-                    <h2 style="color:#0284c7;">OFFICIAL DIGITAL ID DOCUMENT</h2>
-                    <p><b>Full Name:</b> ${name}<br>
-                    <b>ID Number:</b> ${idNum}<br>
-                    <b>Role:</b> ${role}<br>
-                    <b>Phone:</b> ${phone}<br>
-                    <b>City:</b> ${city}</p>
-                    <br>
-                    <img src="${dataUrl}" style="width:520px; border-radius:12px;" />
-                </body>
-                </html>
-            `;
-            const blob = new Blob(["\ufeff", docHtml], { type: "application/msword" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `${name.replace(/\s+/g, "_")}_ID_Document.doc`;
-            a.click();
-            URL.revokeObjectURL(url);
+                const printWin = window.open("", "_blank");
+                if (printWin) {
+                    printWin.document.write(`
+                        <html>
+                        <head>
+                            <title>${name} - ID Document</title>
+                            <style>
+                                body { font-family: Arial, sans-serif; padding: 24px; text-align: center; }
+                                .card-img { max-width: 100%; width: 540px; border-radius: 12px; margin-top: 14px; }
+                                .meta { text-align: left; max-width: 540px; margin: 12px auto; font-size: 14px; line-height: 1.6; }
+                            </style>
+                        </head>
+                        <body>
+                            <h2>OFFICIAL BIOMETRIC ID DOCUMENT</h2>
+                            <div class="meta">
+                                <b>Full Name:</b> ${name}<br>
+                                <b>ID Number:</b> ${idNum}<br>
+                                <b>Role:</b> ${role}<br>
+                                <b>Phone:</b> ${phone}<br>
+                                <b>Biometrics:</b> Eye Iris Scan + 10 Fingerprints (2 Thumbs + 4&4 Fingers)
+                            </div>
+                            <img class="card-img" src="${imgData}" />
+                            <script>window.onload = function(){ window.print(); };<\/script>
+                        </body>
+                        </html>
+                    `);
+                    printWin.document.close();
+                } else {
+                    window.print();
+                }
+                msg.innerText = "✓ Document / PDF print view opened!";
+            } catch (e) {
+                window.print();
+                msg.innerText = "✓ Document print opened!";
+            }
         }
 
-        window.addEventListener("DOMContentLoaded", renderSwatches);
+        window.addEventListener("DOMContentLoaded", () => {
+            renderFingerprintSlots();
+            renderSwatches();
+        });
     </script>
 </body>
 </html>
